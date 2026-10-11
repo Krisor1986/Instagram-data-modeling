@@ -1,56 +1,37 @@
-<!--hide-->
-# Create the database model for Instagram
-<!--endhide-->
+# Instagram Data Modeling
 
+[English](README.md) · [Español](README.es.md) · [Português](README.pt.md)
 
-<onlyfor saas="false" withBanner="false">
+SQLAlchemy data modeling exercise from 4Geeks Academy. The deliverable is five related models and an entity relationship diagram; no frontend or API implementation is required.
 
-## 🌱 How to start this project
+## Models
 
-**Important**: To do this activity you need to `fork` [this repo](https://github.com/4GeeksAcademy/flask-rest-hello) into your **Github** account and then open the forked repo on [Codespaces](https://4geeks.com/lesson/what-is-github-codespaces) (recommended) or Gitpod.
+| Model | Purpose |
+| --- | --- |
+| User | Unique username and email, profile fields, password storage and activity status |
+| Post | Publication caption, creation time and author |
+| Media | Image or video URL belonging to a publication |
+| Comment | Comment text, author and publication |
+| Follower | Directed relationship between two users |
 
+A user has many posts and comments. A post has many media items and comments. Followers connect users through two foreign keys; their composite primary key prevents duplicate follows, and a check constraint prevents self-following. Media accepts only `image` or `video`. Deleting a post through the ORM deletes its media and comments. Passwords are excluded from user serialization; an authentication implementation must hash passwords before storing them.
 
-In the `src/models.py` file of the forked repository, you will find several classes that represent the structure of a sample database.
+## Run locally
 
-Here is a 10 min video explaining what UML is: [https://www.youtube.com/watch?v=UI6lqHOVHic](https://www.youtube.com/watch?v=UI6lqHOVHic)
+Requirements: Python 3.13, Pipenv and the native Graphviz executable (`dot`) on PATH. Installing the Python `graphviz` package alone does not install `dot`. On this Mac, Graphviz is already available in the project's Pipenv environment.
 
-The `diagram.png` file generates a database chart based on the classes that you will be creating. Such charts in Database Management are referred to as ERDs (Entity Relatonship Diagrams). 
+```bash
+pipenv install
+pipenv run diagram
+pipenv run test
+```
 
-Please watch these two short videos explaining ERDs: 
-+ [https://www.youtube.com/watch?v=QpdhBUYk7Kk](https://www.youtube.com/watch?v=QpdhBUYk7Kk)
-+ [https://www.youtube.com/watch?v=-CuY5ADwn24](https://www.youtube.com/watch?v=-CuY5ADwn24)
+Alternatively, generate the diagram with `pipenv run python src/models.py`. The output is `diagram.png` in the project root. Diagram generation and tests do not require a running database server or an `.env` file. Tests use a real in-memory SQLite database with foreign keys enabled.
 
-</onlyfor>
+![Entity relationship diagram](diagram.png)
 
-You will have to create the Entity Relationship Diagram for Instagram's Database - a very similar diagram to this one:
+Diagram legend: PK = primary key, FK = foreign key, UQ = unique, * = required. Lines show one-to-many relationships. The media type check constraint and the self-follow check constraint are defined in `src/models.py`.
 
-![Instagram Diagram](https://github.com/breatheco-de/exercise-instagram-data-modeling/blob/master/assets/example.png?raw=true)
-[Click to open diagram](https://app.quickdatabasediagrams.com/#/d/LxNXQZ)
+## Sources
 
-> 🔥 You can use this FREE tool to practice your diagram for the first time: https://app.quickdatabasediagrams.com/#/d/
-
-
-## 💻 Installation
-
-1. Get inside the environment `$ pipenv shell`
-
-2. Install all dependencies `$ pipenv install`
-
-3. To generate a database diagram as many times as needed, run `$ pipenv run diagram`
-
-4. Once the `diagram.png` file is created in the root of the project, open it to see the UML representation of your database.
-
-
-## 📝Instructions
-
-Your job is to update the `src/models.py` file with the code needed to replicate Instagram's data model.
-
-The project is using the SQLAlchemy Python library to generate the database.
-
-- What tables do you think Instagram might have on its database: E.g: Post, User, etc.?
-- What properties should go inside the User? or inside the Post table?
-- Please add at least 4 models with all of their properties.
-- Refresh the `diagram.png` file at the end by running `$ python src/models.py` on the console.
-
-This and many other projects are built by students as part of the 4Geeks Academy [Coding Bootcamp](https://4geeksacademy.com/us/coding-bootcamp) by [Alejandro Sanchez](https://twitter.com/alesanchezr) and many other contributors. Find out more about our [Full Stack Developer Course](https://4geeksacademy.com/us/coding-bootcamps/part-time-full-stack-developer), and [Data Science Bootcamp](https://4geeksacademy.com/us/coding-bootcamps/datascience-machine-learning).
-
+The repository is a fork of the [official exercise](https://github.com/breatheco-de/exercise-instagram-data-modeling). The Flask starter files come from the school's [flask-rest-hello template](https://github.com/4GeeksAcademy/flask-rest-hello). The model follows the exercise's five-entity reference diagram. The template's existing API, deployment and migration files are retained; they are outside the modeling deliverable. No Codespace is needed.

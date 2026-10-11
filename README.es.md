@@ -1,46 +1,37 @@
-<!--hide-->
-# Crea el modelo de base de datos para Instagram
-<!--endhide-->
+# Modelado de datos de Instagram
 
+[English](README.md) · [Español](README.es.md) · [Português](README.pt.md)
 
-<onlyfor saas="false" withBanner="false">
+Ejercicio de modelado con SQLAlchemy de 4Geeks Academy. La entrega incluye cinco modelos relacionados y un diagrama entidad-relación; no requiere implementar un frontend ni una API.
 
-## 🌱 Cómo iniciar este proyecto
+## Modelos
 
-**Importante**: Para realizar esta actividad necesitas hacer un `fork` de [este repo](https://github.com/4GeeksAcademy/flask-rest-hello) en tu cuenta de **Github** y luego abrir el *fork* en [Codespaces](https://4geeks.com/lesson/what-is-github-codespaces) (recomendado) o Gitpod.
+| Modelo | Propósito |
+| --- | --- |
+| User | Nombre de usuario y correo únicos, perfil, contraseña y estado activo |
+| Post | Texto de publicación, fecha de creación y autor |
+| Media | URL de imagen o vídeo perteneciente a una publicación |
+| Comment | Texto del comentario, autor y publicación |
+| Follower | Relación dirigida entre dos usuarios |
 
-En el archivo `src/models.py` del repositorio forkeado, encontrarás varias clases que representan la estructura de una base de datos de ejemplo
+Un usuario tiene muchas publicaciones y comentarios. Una publicación tiene muchos archivos multimedia y comentarios. Follower conecta usuarios mediante dos claves foráneas: la clave primaria compuesta impide seguimientos duplicados y una restricción impide seguirse a uno mismo. Media acepta únicamente `image` o `video`. Al eliminar una publicación mediante el ORM, se eliminan sus archivos multimedia y comentarios. La serialización excluye la contraseña; una implementación de autenticación debe almacenar su hash.
 
-Aquí hay un video de 10 minutos que explica qué es UML: [https://www.youtube.com/watch?v=UI6lqHOVHic](https://www.youtube.com/watch?v=UI6lqHOVHic)
+## Ejecución local
 
-</onlyfor>
+Requisitos: Python 3.13, Pipenv y el ejecutable nativo de Graphviz (`dot`) en PATH. El paquete Python `graphviz` no instala `dot`. En este Mac, Graphviz ya está disponible en el entorno Pipenv del proyecto.
 
-Vamos a crear el Diagrama de relación de entidad para la base de datos de Instagram, un diagrama muy similar a este:
+```bash
+pipenv install
+pipenv run diagram
+pipenv run test
+```
 
-![Diagrama de Instagram](https://github.com/breatheco-de/exercise-instagram-data-modeling/blob/master/assets/example.png?raw=true)
-[Clic para abrir el diagrama](https://app.quickdatabasediagrams.com/#/d/LxNXQZ)
+También puedes generar el diagrama con `pipenv run python src/models.py`. El resultado es `diagram.png` en la raíz. La generación y las pruebas no necesitan un servidor de base de datos ni un archivo `.env`. Las pruebas utilizan SQLite real en memoria con claves foráneas habilitadas.
 
-> 🔥 Puedes usar esta herramienta GRATUITA para practicar tu diagrama por primera vez: https://app.quickdatabasediagrams.com/#/d/
+![Diagrama entidad-relación](diagram.png)
 
-## 💻 Instalación
+Leyenda: PK = clave primaria, FK = clave foránea, UQ = único, * = obligatorio. Las líneas representan relaciones uno a muchos. Las restricciones del tipo de multimedia y de seguimiento están en `src/models.py`.
 
-1. Entra dentro del environment (entorno) `$ pipenv shell`
+## Fuentes
 
-2. Instala todas las dependencias `$ pipenv install`
-
-3. Para generar un diagrama de la base de datos tantas veces como sea necesario `$ pipenv run diagram`
-
-4. Una vez creado el archivo `diagram.png` en la raiz del proyecto, abrelo para ver la representación UML de tu base de datos.
-
-## 📝 Instrucciones
-
-Tu trabajo es actualizar el archivo `src/models.py` con el código necesario para replicar el modelo de datos de Instagram.
-
-El proyecto está utilizando la librería Python SQLAlchemy para generar la base de datos.
-
-- ¿Qué tablas crees que Instagram podría tener en su base de datos, por ejemplo: Post, Usuario, etc.?
-- ¿Qué propiedades deben ir dentro de la tabla Usuario? o ¿Dentro de la tabla Post?
-- Agrega al menos 4 modelos con todas sus propiedades.
-- Actualiza el archivo `diagram.png` al final ejecutando `$ python src/models.py` en la consola.
-
-Este y otros proyectos son usados para [aprender a programar](https://4geeksacademy.com/es/aprender-a-programar/aprender-a-programar-desde-cero) por parte de los alumnos de 4Geeks Academy [Coding Bootcamp](https://4geeksacademy.com/us/coding-bootcamp) realizado por [Alejandro Sánchez](https://twitter.com/alesanchezr) y muchos otros contribuyentes. Conoce más sobre nuestros [Cursos de Programación](https://4geeksacademy.com/es/curso-de-programacion-desde-cero?lang=es) para convertirte en [Full Stack Developer](https://4geeksacademy.com/es/coding-bootcamps/desarrollador-full-stack/?lang=es), o nuestro [Data Science Bootcamp](https://4geeksacademy.com/es/coding-bootcamps/curso-datascience-machine-learning).
+Este repositorio es un fork del [ejercicio oficial](https://github.com/breatheco-de/exercise-instagram-data-modeling). Los archivos iniciales de Flask proceden del [template flask-rest-hello de la escuela](https://github.com/4GeeksAcademy/flask-rest-hello). El modelo sigue el diagrama de referencia de cinco entidades. Se conservan los archivos de API, despliegue y migraciones del template; están fuera del alcance de esta entrega. No hace falta un Codespace.
